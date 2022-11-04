@@ -1,24 +1,26 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import mongoose from "mongoose";
+import {config} from 'dotenv'
 
-const username = encodeURIComponent("ServerRoot");
-const password = encodeURIComponent("snKjYI8yNKX4KJyH");
-const cluster = "notecallendar.mqzbdke.mongodb.net";
-const authSource = "retryWrites=true";
-const authMechanism = "w=majority";
+config();
 
-const uri = `mongodb+srv://${username}:${password}@${cluster}/?${authSource}&${authMechanism}`;
+const {CLUSTER, AUTH_MECHANISM, AUTH_SOURCE} = process.env;
+const USERNAME = encodeURIComponent(process.env.USERNAME);
+const PASSWORD = encodeURIComponent(process.env.PASSWORD);
 
 export const server = async () => {
-  const client = new MongoClient(uri);
-  try {
-    await client.connect();
-    const result = await client
-      .db("test")
-      .collection("test")
-      .find({})
-      .toArray();
-    console.log(result);
-  } finally {
-    client.close();
+
+  const uri = `mongodb+srv://${USERNAME}:${PASSWORD}@${CLUSTER}/?${AUTH_SOURCE}&${AUTH_MECHANISM}`;
+  const URL_LOCAL = 'mongodb://localhost:27017/test-database';
+
+  try{
+    await mongoose.connect(process.env.NODE_ENV === 'dev' ? URL_LOCAL : uri);
+  } catch(err){
+    console.log(err)
   }
-};
+}
+
+const testSchema = new mongoose.Schema({
+  type: String
+});
+
+export const Test = new mongoose.model('Test', testSchema);
