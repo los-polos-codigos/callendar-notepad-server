@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "main": "./server/server.js",
   "scripts": {
-    "start:local": "NODE_ENV=dev nodemon --exec babel-node ./server.js",
-    "start": "nodemon --exec babel-node ./server.js",
-    "test": "NODE_ENV=test jest",
-    "test:w": "NODE_ENV=test jest --watch"
+    "start:local": "NODE_ENV=dev && nodemon --exec babel-node ./server.js",
+    "start": "NODE_ENV=dev && nodemon --exec babel-node ./server.js",
+    "test": "NODE_ENV=test && jest",
+    "test:w": "NODE_ENV=test && jest --watch"
   },
   "dependencies": {
     "@babel/core": "^7.19.6",
