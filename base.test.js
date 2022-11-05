@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import request from "supertest";
-const { app } = require("./app.js");
+import { app } from "./app.js";
 
 describe("Base tests", () => {
   beforeAll(async () => {
@@ -27,6 +27,26 @@ describe("Base tests", () => {
   it("/database-health", async () => {
     try {
       const response = await request(app).get("/database-health");
+      expect(response.status).toBe(200);
+      expect(response.text).toBe("working");
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  it("/encryption-health", async () => {
+    try {
+      const response = await request(app).get("/encryption-health");
+      expect(response.status).toBe(200);
+      expect(response.text).toBe("working");
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  it("/decryption-health", async () => {
+    try {
+      const response = await request(app).get("/decryption-health");
       expect(response.status).toBe(200);
       expect(response.text).toBe("working");
     } catch (err) {
