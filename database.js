@@ -4,8 +4,8 @@ import { config } from "dotenv";
 config();
 
 const { CLUSTER, AUTH_MECHANISM, AUTH_SOURCE } = process.env;
-const USERNAME = encodeURIComponent(process.env.USERNAME);
-const PASSWORD = encodeURIComponent(process.env.PASSWORD);
+const USERNAME = encodeURIComponent(process.env.DB_USER);
+const PASSWORD = encodeURIComponent(process.env.DB_PASSWORD);
 
 export const server = async () => {
   const uri = `mongodb+srv://${USERNAME}:${PASSWORD}@${CLUSTER}/?${AUTH_SOURCE}&${AUTH_MECHANISM}`;
