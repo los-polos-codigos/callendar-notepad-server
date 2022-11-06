@@ -4,7 +4,7 @@
   "main": "./server/server.js",
   "scripts": {
     "start:local": "cross-env NODE_ENV=dev nodemon --exec babel-node ./server.js",
-    "start": "cross-env NODE_ENV=dev nodemon --exec babel-node ./server.js",
+    "start": "nodemon --exec babel-node ./server.js",
     "test": "cross-env NODE_ENV=test jest",
     "test:w": "cross-env NODE_ENV=test jest --watch"
   },

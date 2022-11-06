@@ -33,24 +33,4 @@ describe("Base tests", () => {
       throw err;
     }
   });
-
-  it("/encryption-health", async () => {
-    try {
-      const response = await request(app).get("/encryption-health");
-      expect(response.status).toBe(200);
-      expect(response.text).toBe("working");
-    } catch (err) {
-      throw err;
-    }
-  });
-
-  it("/decryption-health", async () => {
-    try {
-      const response = await request(app).get("/decryption-health");
-      expect(response.status).toBe(200);
-      expect(response.text).toBe("working");
-    } catch (err) {
-      throw err;
-    }
-  });
 });
