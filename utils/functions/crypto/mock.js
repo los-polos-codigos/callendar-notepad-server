@@ -1,5 +1,5 @@
 export const mock_object = {
-  phone: String(792507113),
+  phone: 792507113,
   name: "Mateusz",
   surrname: "Myśliwiec",
   subscription: {
@@ -11,10 +11,10 @@ export const mock_object = {
 };
 export const mock_array = [
   1,
-  "2",
+  "tak",
   new Date(),
   {
-    phone: String(792507113),
+    phone: 792507113,
     name: "Mateusz",
     surrname: "Myśliwiec",
     subscription: {

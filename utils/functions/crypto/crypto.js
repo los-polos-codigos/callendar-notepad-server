@@ -3,106 +3,65 @@ import { config } from "dotenv";
 
 config();
 
-const object_crypto = (obj, type) => {
+const is_custom = (custom_string) => {
+  if (custom_string.toLowerCase() === "true" || custom_string.toLowerCase() === "false") return Boolean(custom_string);
+  if (typeof parseInt(custom_string) === "number" && !isNaN(parseInt(custom_string))) return parseInt(custom_string);
+  return custom_string;
+};
+
+const object_crypto = (object_to_convert, crypto_function) => {
   let new_object = new Object();
-  Object.keys(obj).map((val) => {
-    if (typeof obj[val] !== "object" && !(obj[val] instanceof Date)) new_object[val] = decrypt_value(obj[val]);
 
-    if (typeof obj[val] === "object" && !(obj[val] instanceof Date)) new_object[val] = object_decryption(obj[val]);
-
-    if (obj[val] instanceof Date) new_object[val] = obj[val];
+  Object.keys(object_to_convert).map((value) => {
+    if (Array.isArray(object_to_convert[value]))
+      new_object[value] = array_crypto(object_to_convert[value], crypto_function);
+    if (
+      typeof object_to_convert[value] === "object" &&
+      !(object_to_convert[value] instanceof Date) &&
+      !Array.isArray(object_to_convert[value])
+    )
+      new_object[value] = object_crypto(object_to_convert[value], crypto_function);
+    else if (object_to_convert[value] instanceof Date) new_object[value] = object_to_convert[value];
+    else new_object[value] = crypto_function(object_to_convert[value].toString());
   });
 
   return new_object;
 };
-const array_crypto = (arr, type) => {
+
+const array_crypto = (array_to_convert, crypto_function) => {
   let new_array = new Array();
-
-  arr.forEach((element) => {
-    if (typeof element === "object") new_array.push(object_crypto(element, type));
-
-    if (Array.isArray(element)) new_array.push(array_decryption(element));
-
-    if (typeof element === "string") new_array.push(type(element));
+  array_to_convert.forEach((value) => {
+    if (Array.isArray(value)) new_array.push(array_crypto(value, crypto_function));
+    else if (typeof value === "object" && !(value instanceof Date) && !Array.isArray(value))
+      new_array.push(object_crypto(value, crypto_function));
+    else if (value instanceof Date) new_array.push(value);
+    else new_array.push(crypto_function(value.toString()));
   });
-
   return new_array;
 };
 
-export const Encryption = (value) => {
-  const encrypt_value = (val) => {
-    return CryptoJS.Rabbit.encrypt(val, process.env.CRYPTO_KEY).toString();
-  };
-
-  // const object_encryption = (obj) => {
-  //   let new_object = new Object();
-  //   Object.keys(obj).map((val) => {
-  //     if (typeof obj[val] !== "object" && !(obj[val] instanceof Date))
-  //       new_object[val] = encrypt_value(obj[val].toString());
-
-  //     if (typeof obj[val] === "object" && !(obj[val] instanceof Date)) new_object[val] = object_encryption(obj[val]);
-
-  //     if (obj[val] instanceof Date) new_object[val] = obj[val];
-  //   });
-
-  //   return new_object;
-  // };
-
-  // const array_encryption = (arr) => {
-  //   let new_array = new Array();
-
-  //   arr.forEach((element) => {
-  //     if (typeof element === "object") new_array.push(object_encryption(element));
-
-  //     if (Array.isArray(element)) new_array.push(array_encryption(element));
-
-  //     if (typeof element === "string" || typeof element === "number") new_array.push(encrypt_value(element.toString()));
-  //   });
-
-  //   return new_array;
-  // };
-
-  if (typeof value === "object" && !(value instanceof Date)) {
-    return object_encryption(value);
-  } else if (Array.isArray(value)) {
-    return array_crypto(value, encrypt_value());
-  }
-  if (!(value instanceof Date)) return encrypt_value(value.toString());
-  else return value;
+const string_crypto = (string_to_convert, crypto_function) => {
+  return crypto_function(string_to_convert.toString());
 };
 
-export const Decryption = (value) => {
-  const decrypt_value = (val) => {
-    return CryptoJS.Rabbit.decrypt(val, process.env.CRYPTO_KEY).toString(CryptoJS.enc.Utf8);
+export const Encryption = (encryption_value) => {
+  const encrypt_item = (val) => {
+    return CryptoJS.Rabbit.encrypt(val, process.env.CRYPTO_KEY).toString();
   };
-  const object_decryption = (obj) => {
-    let new_object = new Object();
-    Object.keys(obj).map((val) => {
-      if (typeof obj[val] !== "object" && !(obj[val] instanceof Date)) new_object[val] = decrypt_value(obj[val]);
+  if (typeof encryption_value === "object" && !(encryption_value instanceof Date) && !Array.isArray(encryption_value))
+    return object_crypto(encryption_value, encrypt_item);
+  else if (Array.isArray(encryption_value)) return array_crypto(encryption_value, encrypt_item);
+  else if (!(encryption_value instanceof Date)) return string_crypto(encryption_value, encrypt_item);
+  else return encryption_value;
+};
 
-      if (typeof obj[val] === "object" && !(obj[val] instanceof Date)) new_object[val] = object_decryption(obj[val]);
-
-      if (obj[val] instanceof Date) new_object[val] = obj[val];
-    });
-
-    return new_object;
+export const Decryption = (decryption_value) => {
+  const decrypt_item = (val) => {
+    return is_custom(CryptoJS.Rabbit.decrypt(val, process.env.CRYPTO_KEY).toString(CryptoJS.enc.Utf8));
   };
-  const array_decryption = (arr) => {
-    let new_array = new Array();
-
-    arr.forEach((element) => {
-      if (typeof element === "object") new_array.push(object_decryption(element));
-
-      if (Array.isArray(element)) new_array.push(array_decryption(element));
-
-      if (typeof element === "string") new_array.push(decrypt_value(element));
-    });
-
-    return new_array;
-  };
-
-  if (typeof value === "object") return object_decryption(value);
-  else if (Array.isArray(value)) return array_decryption(value);
-
-  return decrypt_value(value);
+  if (typeof decryption_value === "object" && !(decryption_value instanceof Date) && !Array.isArray(decryption_value))
+    return object_crypto(decryption_value, decrypt_item);
+  else if (Array.isArray(decryption_value)) return array_crypto(decryption_value, decrypt_item);
+  else if (!(decryption_value instanceof Date)) return string_crypto(decryption_value, decrypt_item);
+  else return decryption_value;
 };
