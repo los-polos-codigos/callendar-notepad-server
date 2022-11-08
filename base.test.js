@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import request from "supertest";
-const { app } = require("./app.js");
+import { app } from "./app.js";
 
 describe("Base tests", () => {
   beforeAll(async () => {

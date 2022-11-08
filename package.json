@@ -15,6 +15,7 @@
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "crypto-js": "^4.1.1",
     "dotenv": "^16.0.3",
     "eslint": "^7.32.0 || ^8.2.0",
     "eslint-plugin-prettier": "^4.2.1",

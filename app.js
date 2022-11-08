@@ -3,7 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 
 import { config } from "dotenv";
-import { server, Test } from "./database.js";
+import { server, DatabaseTest } from "./database.js";
 
 config();
 
@@ -21,7 +21,7 @@ app.get("/app-health", async (req, res) => {
 });
 
 app.get("/database-health", async (req, res) => {
-  const data = await Test.find();
+  const data = await DatabaseTest.find();
   res.status(200);
   res.send(data[0].type);
 });

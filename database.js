@@ -1,6 +1,5 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import { config } from "dotenv";
-
 config();
 
 const { CLUSTER, AUTH_MECHANISM, AUTH_SOURCE } = process.env;
@@ -22,4 +21,4 @@ const testSchema = new mongoose.Schema({
   type: String,
 });
 
-export const Test = new mongoose.model("Test", testSchema);
+export const DatabaseTest = new mongoose.model("Test", testSchema);
