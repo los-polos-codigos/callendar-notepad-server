@@ -32,13 +32,3 @@ export const send_message = (phone_number, message) => {
     }
   });
 };
-//Test connection is bad  configured because i didn't have money on host and i can't send test message
-export const test_connection = () => {
-  let session = smpp.connect({
-    //19999 is not ssl port ssl port is 29999 but he's just not working
-    url: "smpp://smpp.smsapi.pl:19999",
-  });
-
-  let pdu = new smpp.PDU("enquire_link");
-  session.send(pdu, async (res) => {});
-};
