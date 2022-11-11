@@ -25,8 +25,7 @@
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "smpp": "^0.6.0-rc.4",
-    "socket.io": "^4.5.3",
-    "twilio": "^3.83.2"
+    "socket.io": "^4.5.3"
   },
   "presets": [
     "@babel/preset-env"
