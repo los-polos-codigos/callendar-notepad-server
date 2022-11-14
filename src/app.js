@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 
 import { config } from "dotenv";
 import { server, DatabaseTest } from "../database.js";
+
 config();
 
 const app = express();
