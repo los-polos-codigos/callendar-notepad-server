@@ -8,8 +8,7 @@ const PASSWORD = encodeURIComponent(process.env.DB_PASSWORD);
 
 export const server = async () => {
   const uri = `mongodb+srv://${USERNAME}:${PASSWORD}@${CLUSTER}/?${AUTH_SOURCE}&${AUTH_MECHANISM}`;
-  const URL_LOCAL = "mongodb://localhost:27017/test-database";
-
+  const URL_LOCAL = "mongodb://127.0.0.1:27017/test-database";
   try {
     await mongoose.connect(process.env.NODE_ENV === "dev" ? URL_LOCAL : uri);
   } catch (err) {
