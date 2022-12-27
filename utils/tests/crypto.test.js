@@ -1,5 +1,5 @@
-import { Encryption, Decryption } from "./crypto";
-import { mock_array, mock_object, mock_string } from "./mock.js";
+import { Encryption, Decryption } from "../functions/crypto/crypto.js";
+import { mock_array, mock_object, mock_string } from "../../mock/crypto.mock.js";
 import { expect, test } from "@jest/globals";
 
 test("Returns encrypted value", () => {

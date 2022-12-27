@@ -15,9 +15,3 @@ export const server = async () => {
     console.log(err);
   }
 };
-
-const testSchema = new mongoose.Schema({
-  type: String,
-});
-
-export const DatabaseTest = new mongoose.model("Test", testSchema);

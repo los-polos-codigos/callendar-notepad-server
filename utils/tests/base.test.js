@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import request from "supertest";
-import { app } from "../../../app.js";
+import { app } from "../../app.js";
 
 describe("Base tests", () => {
   beforeAll(async () => {
-    await mongoose.connect("mongodb://localhost:27017/test-database", {
+    await mongoose.connect("mongodb://127.0.0.1:27017/test-database", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

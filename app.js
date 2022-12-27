@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { config } from "dotenv";
-import { server } from "./utils/functions/database/database.js";
+import { server } from "./utils/functions/server/server.js";
 config();
 
 const app = express();
