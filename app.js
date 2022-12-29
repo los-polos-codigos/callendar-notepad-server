@@ -25,6 +25,9 @@ import databaseRoute from "./utils/routes/database.js";
 import authPhoneRoute from "./utils/routes/auth/phone.js";
 import authCodeRoute from "./utils/routes/auth/code.js";
 import setDataRoute from "./utils/routes/setData.js";
+import loginTokenRoute from "./utils/routes/jwt/login.jwt.js";
+import generateTokenRoute from "./utils/routes/jwt/generate.jwt.js";
+import refreshTokenRoute from "./utils/routes/jwt/refresh.jwt.js";
 
 app.use("/database", databaseRoute);
 //Database
@@ -32,6 +35,11 @@ app.use("/database", databaseRoute);
 app.use("/auth", authPhoneRoute);
 app.use("/auth", authCodeRoute);
 //Authentication
+
+app.use("/token", loginTokenRoute);
+app.use("/token", generateTokenRoute);
+app.use("/token", refreshTokenRoute);
+//Tokens
 
 app.use("/setData", setDataRoute);
 //Others
