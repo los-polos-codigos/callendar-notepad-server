@@ -1,14 +1,34 @@
-let code_fail = 0;
+let variable = [];
 
 const fail = {
-  view: () => {
-    return code_fail;
+  view: (user) => {
+    if (variable.some((e) => e.phone === user.phone && e.IMEI === user.IMEI)) {
+      for (let i = 0; i < variable.length; i++) {
+        if (variable[i].phone === user.phone && variable[i].IMEI === user.IMEI) {
+          console.log(variable[i].fail);
+          return variable[i].fail;
+        }
+      }
+    } else {
+      variable.push({ ...user, fail: 0 });
+      return 0;
+    }
   },
-  increment: () => {
-    return ++code_fail;
+  increment: (user) => {
+    variable.forEach((e, index) => {
+      if (e.phone === user.phone && e.IMEI === user.IMEI) {
+        variable[index].fail += 1;
+        return;
+      } else return;
+    });
   },
-  clear: () => {
-    return (code_fail = 0);
+  clear: (user) => {
+    variable.forEach((e, index) => {
+      if (e.phone === user.phone && e.IMEI === user.IMEI) {
+        variable.splice(index, 1);
+        return;
+      } else return;
+    });
   },
 };
 

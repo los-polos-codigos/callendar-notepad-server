@@ -2,7 +2,7 @@ import express from "express";
 
 const router = express.Router();
 
-router.post("/login", (req, res) => {});
+router.post("/verify", (req, res) => {});
 
 export default router;
 // import { Jwt } from "jsonwebtoken";
@@ -21,3 +21,5 @@ export default router;
 //     }
 //   });
 // };
+
+//403 error

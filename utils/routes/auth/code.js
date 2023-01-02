@@ -16,46 +16,64 @@ config();
 const router = express.Router();
 
 router.post("/code", async (req, res) => {
-  const delay = 1000 * 60 * 0.5;
-  const blockRequest = setTimeout(() => {
-    fail.clear();
-  }, delay);
+  if (fail.view({ phone: req.body.phone, IMEI: req.body.IMEI }) < 3) {
+    const user_code_verification = variable.some((v) => {
+      if (v.phone === req.body.phone && v.IMEI === req.body.IMEI && v.code === req.body.code) {
+        return true;
+      } else {
+        return false;
+      }
+    });
 
-  if (fail.view() < 3) {
+    if (user_code_verification === true) {
+      res.status(200);
+      res.end();
+    } else {
+      fail.increment({ phone: req.body.phone, IMEI: req.body.IMEI });
+      res.status(401);
+      res.send(JSON.parse(JSON.stringify({ Comment: "Auth.03" })));
+    }
+
     /////////////////////////////////////////////////////////////////
     //Here is correct valid authorization continuation
 
-    if (JSON.stringify(variable.slice(-1)[0]) === JSON.stringify(req.body)) {
-      const verification = await user_verification.find({ ...variable.slice(-1).phone });
-
-      if (verification.length === 0) {
-        const user = { userId: verification._id, isUserArleadyExist: false };
-        res.status(201);
-        res.send(user);
-      } else {
-        const user = { userId: verification._id, isUserArleadyExist: true };
-        res.status(200);
-        res.send(user);
-      }
-    }
-    /////////////////////////////////////////////////////////////////
-    //Here is incorrect valid authorization continuation
-    else {
-      res.status(401);
-      res.send("Incorrect authorization code");
-      fail.increment();
-      if (fail.view() === 3) blockRequest;
-    }
+    // if (JSON.stringify(correctUserData[0]) === JSON.stringify(req.body)) {
+    //   console.log(correctUserData);
+    //   const verification = await user_verification.find({ ...correctUserData.phone });
+    //   // , (err, user) => {
+    //   //   if (err) throw err;
+    //   //   else {
+    //   //     console.log(user);
+    //   //     res.send(user);
+    //   //   }
+    //   // }); //TODO tutaj skończyłem rozpierdol projektu
+    //   if (verification.length === 0) {
+    //     const user = { isUserArleadyExist: false };
+    //     res.status(201);
+    //     res.send(user);
+    //   } else {
+    //     console.log(verification);
+    //     const user = { phone: verification[0].phone, isUserArleadyExist: true };
+    //     res.status(200);
+    //     res.send(user);
+    //   }
+    // }
+    // /////////////////////////////////////////////////////////////////
+    // //Here is incorrect valid authorization continuation
+    // else {
+    //   res.status(401);
+    //   res.send("Incorrect authorization code");
+    //   fail.increment();
+    // }
     /////////////////////////////////////////////////////////////////
   } else {
-    let timeLeft;
-
-    if (Math.ceil((blockRequest._idleTimeout - blockRequest._idleStart) / 1000) <= 0) timeLeft = 0;
-    else timeLeft = Math.ceil((blockRequest._idleTimeout - blockRequest._idleStart) / 1000);
-
-    res.status(423);
-    res.send(`Too many attempts, please try again in ${timeLeft} s`);
+    res.status(429);
+    res.send(JSON.parse(JSON.stringify({ Comment: "Auth.02" })));
+    fail.clear({ phone: req.body.phone, IMEI: req.body.IMEI });
   }
+  //TODO muszę dodać tutaj usówanie użytkowników z
+  //TODO tablicy variable którym przekroczył się czas trwania kodu
+  //TODO lub użytkownik dokonał poprawnej weryfikacji
 });
 
 export default router;
