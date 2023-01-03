@@ -20,7 +20,7 @@ let blockRequest = null;
 
 router.post("/phone", async (req, res) => {
   const delay = 1000 * 60 * 15;
-  const user = { phone: req.body.phone, IMEI: req.body.IMEI };
+  const user = { phone: req.body.phone, deviceId: req.body.deviceId };
 
   if (fail.view(user) === 4) blockRequest = Date.now() + delay;
 
@@ -39,14 +39,14 @@ router.post("/phone", async (req, res) => {
         code: generate().toString(),
         timeout: Date.now() + 1000 * 60 * 15,
       });
-    } //TODO Przeczytaj todo w pliku code.js
+    } //Przeczytaj todo w pliku code.js
 
     /////////////////////////////////////////////////////////////////
     //Here is message function
     //później zmienić na !==
     if (process.env.NODE_ENV === "test") {
-      //todo Here is a send function but i didn't have a
-      //todo callback from sms api i need to check this with any balance
+      //FIXME:  Here is a send function but i didn't have a
+      //FIXME:  callback from sms api i need to check this with any balance
 
       //send_message(variable.slice(-1).phone, `code ${variable.slice(-1).code}`)
       res.status(200);

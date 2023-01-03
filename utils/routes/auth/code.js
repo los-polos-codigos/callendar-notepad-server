@@ -10,15 +10,16 @@ import fail from "../../variables/auth-code.variable.js";
 //Variables
 
 //
-import { user_verification } from "../../models/user_verification.model.js";
+import { user_verification as database } from "../../models/user_verification.model.js";
+import { accessToken, refreshToken } from "../token/generate.token.js";
 //Models
 config();
 const router = express.Router();
 
 router.post("/code", async (req, res) => {
-  if (fail.view({ phone: req.body.phone, IMEI: req.body.IMEI }) < 3) {
+  if (fail.view({ phone: req.body.phone, deviceId: req.body.deviceId }) < 3) {
     const user_code_verification = variable.some((v) => {
-      if (v.phone === req.body.phone && v.IMEI === req.body.IMEI && v.code === req.body.code) {
+      if (v.phone === req.body.phone && v.deviceId === req.body.deviceId && v.code === req.body.code) {
         return true;
       } else {
         return false;
@@ -26,54 +27,55 @@ router.post("/code", async (req, res) => {
     });
 
     if (user_code_verification === true) {
-      res.status(200);
-      res.end();
+      const docs = await database.find({ phone: req.body.phone });
+
+      if (Array.isArray(docs) && !docs.length) {
+        const create = await database.create({ phone: req.body.phone });
+        create instanceof database;
+
+        res.status(200);
+        res.send(
+          JSON.parse(
+            JSON.stringify({
+              isUserAlreadyExist: false,
+              accessToken: accessToken(req.body.phone),
+              refreshToken: refreshToken(req.body.phone),
+            })
+          )
+        );
+        res.end();
+      } else {
+        res.status(200);
+        res.send(
+          JSON.parse(
+            JSON.stringify({
+              isUserAlreadyExist: true,
+              accessToken: accessToken(req.body.phone),
+              refreshToken: refreshToken(req.body.phone),
+            })
+          )
+        );
+        res.end();
+      }
+      //Here i was checkiing variable and i delete all userId (phone number) objects
+      variable.forEach((e, i) => {
+        if (e.phone === req.body.phone && e.deviceId === req.body.deviceId) variable.splice(i, 1);
+      });
     } else {
-      fail.increment({ phone: req.body.phone, IMEI: req.body.IMEI });
+      fail.increment({ phone: req.body.phone, deviceId: req.body.deviceId });
       res.status(401);
       res.send(JSON.parse(JSON.stringify({ Comment: "Auth.03" })));
     }
-
-    /////////////////////////////////////////////////////////////////
-    //Here is correct valid authorization continuation
-
-    // if (JSON.stringify(correctUserData[0]) === JSON.stringify(req.body)) {
-    //   console.log(correctUserData);
-    //   const verification = await user_verification.find({ ...correctUserData.phone });
-    //   // , (err, user) => {
-    //   //   if (err) throw err;
-    //   //   else {
-    //   //     console.log(user);
-    //   //     res.send(user);
-    //   //   }
-    //   // }); //TODO tutaj skończyłem rozpierdol projektu
-    //   if (verification.length === 0) {
-    //     const user = { isUserArleadyExist: false };
-    //     res.status(201);
-    //     res.send(user);
-    //   } else {
-    //     console.log(verification);
-    //     const user = { phone: verification[0].phone, isUserArleadyExist: true };
-    //     res.status(200);
-    //     res.send(user);
-    //   }
-    // }
-    // /////////////////////////////////////////////////////////////////
-    // //Here is incorrect valid authorization continuation
-    // else {
-    //   res.status(401);
-    //   res.send("Incorrect authorization code");
-    //   fail.increment();
-    // }
-    /////////////////////////////////////////////////////////////////
   } else {
     res.status(429);
     res.send(JSON.parse(JSON.stringify({ Comment: "Auth.02" })));
-    fail.clear({ phone: req.body.phone, IMEI: req.body.IMEI });
+    fail.clear({ phone: req.body.phone, deviceId: req.body.deviceId });
   }
-  //TODO muszę dodać tutaj usówanie użytkowników z
-  //TODO tablicy variable którym przekroczył się czas trwania kodu
-  //TODO lub użytkownik dokonał poprawnej weryfikacji
+  //Here i was checkind create date and i deleting vairable
+  variable.forEach((e, i) => {
+    if (e.timeout - Date.now() <= 0) variable.splice(i, 1);
+    console.log(e.timeout - Date.now());
+  });
 });
 
 export default router;

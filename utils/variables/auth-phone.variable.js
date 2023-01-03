@@ -4,9 +4,9 @@ let user_fail = [];
 
 export const fail = {
   view: (user) => {
-    if (user_fail.some((e) => e.phone === user.phone && e.IMEI === user.IMEI)) {
+    if (user_fail.some((e) => e.phone === user.phone && e.deviceId === user.deviceId)) {
       for (let i = 0; i < user_fail.length; i++) {
-        if (user_fail[i].phone === user.phone && user_fail[i].IMEI === user.IMEI) {
+        if (user_fail[i].phone === user.phone && user_fail[i].deviceId === user.deviceId) {
           return user_fail[i].fail;
         }
       }
@@ -17,14 +17,14 @@ export const fail = {
   },
   increment: (user) => {
     user_fail.forEach((e, index) => {
-      if (e.phone === user.phone && e.IMEI === user.IMEI) {
+      if (e.phone === user.phone && e.deviceId === user.deviceId) {
         user_fail[index].fail += 1;
       }
     });
   },
   clear: (user) => {
     user_fail.forEach((e, index) => {
-      if (e.phone === user.phone && e.IMEI === user.IMEI) {
+      if (e.phone === user.phone && e.deviceId === user.deviceId) {
         user_fail.splice(index, 1);
       }
     });

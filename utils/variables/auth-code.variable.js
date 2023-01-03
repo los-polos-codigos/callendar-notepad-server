@@ -2,10 +2,9 @@ let variable = [];
 
 const fail = {
   view: (user) => {
-    if (variable.some((e) => e.phone === user.phone && e.IMEI === user.IMEI)) {
+    if (variable.some((e) => e.phone === user.phone && e.deviceId === user.deviceId)) {
       for (let i = 0; i < variable.length; i++) {
-        if (variable[i].phone === user.phone && variable[i].IMEI === user.IMEI) {
-          console.log(variable[i].fail);
+        if (variable[i].phone === user.phone && variable[i].deviceId === user.deviceId) {
           return variable[i].fail;
         }
       }
@@ -16,7 +15,7 @@ const fail = {
   },
   increment: (user) => {
     variable.forEach((e, index) => {
-      if (e.phone === user.phone && e.IMEI === user.IMEI) {
+      if (e.phone === user.phone && e.deviceId === user.deviceId) {
         variable[index].fail += 1;
         return;
       } else return;
@@ -24,7 +23,7 @@ const fail = {
   },
   clear: (user) => {
     variable.forEach((e, index) => {
-      if (e.phone === user.phone && e.IMEI === user.IMEI) {
+      if (e.phone === user.phone && e.deviceId === user.deviceId) {
         variable.splice(index, 1);
         return;
       } else return;
