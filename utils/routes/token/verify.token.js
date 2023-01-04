@@ -10,7 +10,6 @@ router.post("/verify", (req, res) => {
   jwt.verify(received_token, process.env.SECRET_TOKEN, (err, decoded) => {
     if (err) {
       res.status(403);
-      res.send("Token.02");
       res.end();
     } else {
       res.status(200);

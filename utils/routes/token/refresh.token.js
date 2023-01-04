@@ -12,7 +12,6 @@ router.post("/refresh", (req, res) => {
   jwt.verify(received_token, process.env.SECRET_TOKEN, (err, decoded) => {
     if (err) {
       res.status(403);
-      res.send("Token.01");
       res.end();
     } else {
       res.status(200);
