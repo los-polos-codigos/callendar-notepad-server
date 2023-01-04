@@ -1,6 +1,6 @@
 export let variable = [];
 let user_fail = [];
-//TODO zjebałem userfail powinienem zapisywać użytkownika który dostaje faila a nie samego faila
+//zjebałem userfail powinienem zapisywać użytkownika który dostaje faila a nie samego faila
 
 export const fail = {
   view: (user) => {

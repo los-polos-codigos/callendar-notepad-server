@@ -18,13 +18,9 @@ const router = express.Router();
 
 router.post("/code", async (req, res) => {
   if (fail.view({ phone: req.body.phone, deviceId: req.body.deviceId }) < 3) {
-    const user_code_verification = variable.some((v) => {
-      if (v.phone === req.body.phone && v.deviceId === req.body.deviceId && v.code === req.body.code) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+    const user_code_verification = variable.some(
+      (v) => v.phone === req.body.phone && v.deviceId === req.body.deviceId && v.code === req.body.code
+    );
 
     if (user_code_verification === true) {
       const docs = await database.find({ phone: req.body.phone });
@@ -45,19 +41,33 @@ router.post("/code", async (req, res) => {
         );
         res.end();
       } else {
-        res.status(200);
-        res.send(
-          JSON.parse(
-            JSON.stringify({
-              isUserAlreadyExist: true,
-              accessToken: accessToken(req.body.phone),
-              refreshToken: refreshToken(req.body.phone),
-            })
-          )
-        );
-        res.end();
+        if (typeof docs[0].name !== "undefined" && typeof docs[0].surrname !== "undefined") {
+          res.status(200);
+          res.send(
+            JSON.parse(
+              JSON.stringify({
+                isUserAlreadyExist: true,
+                accessToken: accessToken(req.body.phone),
+                refreshToken: refreshToken(req.body.phone),
+              })
+            )
+          );
+          res.end();
+        } else {
+          res.status(200);
+          res.send(
+            JSON.parse(
+              JSON.stringify({
+                isUserAlreadyExist: false,
+                accessToken: accessToken(req.body.phone),
+                refreshToken: refreshToken(req.body.phone),
+              })
+            )
+          );
+          res.end();
+        }
       }
-      //Here i was checkiing variable and i delete all userId (phone number) objects
+      //Here i was checking variable and i delete all userId (phone number) objects
       variable.forEach((e, i) => {
         if (e.phone === req.body.phone && e.deviceId === req.body.deviceId) variable.splice(i, 1);
       });
