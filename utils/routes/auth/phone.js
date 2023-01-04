@@ -25,7 +25,6 @@ router.post("/phone", async (req, res) => {
   if (fail.view(user) === 4) blockRequest = Date.now() + delay;
 
   if (fail.view(user) < 5) {
-    /////////////////////////////////////////////////////////////////
     //Here is creating variable with parameters
     if (process.env.NODE_ENV !== "test") {
       variable.push({
