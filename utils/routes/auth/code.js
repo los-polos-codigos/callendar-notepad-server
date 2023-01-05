@@ -25,46 +25,46 @@ router.post("/code", async (req, res) => {
     if (user_code_verification === true) {
       const docs = await database.find({ phone: req.body.phone });
 
-      // TODO: dlaczego to sprawdznie jest tak duze
-      if (Array.isArray(docs) && !docs.length) {
-        console.log("nie exist");
+      if (!docs.length) {
         const create = await database.create({ phone: req.body.phone });
+        const userId = create._id.toString();
 
         res.status(200);
         res.send(
           JSON.parse(
             JSON.stringify({
               isUserAlreadyExist: false,
-              // TODO: tutaj powinniśmy przekazywać id użytkownika a nie telefon zakładam że można jest wyciągnąc ze zmienniej create powyżej
-              accessToken: generateAccessToken(req.body.phone),
-              refreshToken: generateRefreshToken(req.body.phone),
+              accessToken: generateAccessToken(userId),
+              refreshToken: generateRefreshToken(userId),
             })
           )
         );
         res.end();
       } else {
         if (typeof docs[0].name !== "undefined" && typeof docs[0].surrname !== "undefined") {
+          const userId = docs[0]._id.toString();
+
           res.status(200);
           res.send(
             JSON.parse(
               JSON.stringify({
                 isUserAlreadyExist: true,
-                // TODO: tutaj powinniśmy przekazywać id użytkownika a nie telefon zakładam że można jest wyciągnąc ze zmienniej docs
-                accessToken: generateAccessToken(req.body.phone),
-                refreshToken: generateRefreshToken(req.body.phone),
+                accessToken: generateAccessToken(userId),
+                refreshToken: generateRefreshToken(userId),
               })
             )
           );
           res.end();
         } else {
+          const userId = docs[0]._id.toString();
+
           res.status(200);
           res.send(
             JSON.parse(
               JSON.stringify({
                 isUserAlreadyExist: false,
-                // TODO: tutaj powinniśmy przekazywać id użytkownika a nie telefon zakładam że można jest wyciągnąc ze zmienniej docs
-                accessToken: generateAccessToken(req.body.phone),
-                refreshToken: generateRefreshToken(req.body.phone),
+                accessToken: generateAccessToken(userId),
+                refreshToken: generateRefreshToken(userId),
               })
             )
           );
