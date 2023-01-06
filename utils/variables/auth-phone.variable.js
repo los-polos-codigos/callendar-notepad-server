@@ -1,6 +1,5 @@
 export let variable = [];
 let user_fail = [];
-//zjebałem userfail powinienem zapisywać użytkownika który dostaje faila a nie samego faila
 
 export const fail = {
   view: (user) => {

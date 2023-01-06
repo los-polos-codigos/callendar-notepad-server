@@ -27,6 +27,9 @@ import authCodeRoute from "./utils/routes/auth/code.js";
 import setDataRoute from "./utils/routes/setData.js";
 import verifyTokenRoute from "./utils/routes/token/verify.token.js";
 import refreshTokenRoute from "./utils/routes/token/refresh.token.js";
+import { checkDatabase } from "./utils/middleware/checkDatabase.js";
+
+app.use(checkDatabase);
 
 app.use("/database", databaseRoute);
 //Database
