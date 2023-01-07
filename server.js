@@ -1,6 +1,6 @@
 import { app } from "./app.js";
 
-const PORT = 2137;
+const PORT = process.env.PORT || 2137;
 
 app.get("/", (req, res) => {});
 
