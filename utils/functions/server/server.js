@@ -15,6 +15,7 @@ export const server = async () => {
   const uri = `mongodb+srv://${USERNAME2}:${PASSWORD}@${CLUSTER}/${DATABASE}?${AUTH_SOURCE}&${AUTH_MECHANISM}`;
   const URL_LOCAL = "mongodb://127.0.0.1:27017/test-database";
   try {
+    mongoose.set("strictQuery", false);
     await mongoose.connect(process.env.NODE_ENV === "dev" ? URL_LOCAL : uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
