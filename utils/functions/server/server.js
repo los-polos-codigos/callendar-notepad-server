@@ -9,6 +9,8 @@ const PASSWORD = encodeURIComponent(process.env.DB_PASSWORD);
 export let databaseErr = true;
 
 export const server = async () => {
+  console.log(USERNAME);
+  console.log(CLUSTER);
   const uri = `mongodb+srv://${USERNAME}:${PASSWORD}@${CLUSTER}/?${AUTH_SOURCE}&${AUTH_MECHANISM}`;
   const URL_LOCAL = "mongodb://127.0.0.1:27017/test-database";
   try {
