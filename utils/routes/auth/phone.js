@@ -18,13 +18,20 @@ const router = express.Router();
 
 let blockRequest = null;
 const PhoneValidationPattern = /^[\+]\d{1,3}\d{9}$/g;
-const PhoneValidationLetters = /[A-Za-z]/g;
 
 router.post("/phone", async (req, res) => {
   const delay = 1000 * 60 * 15;
   const user = { phone: req.body.phone, deviceId: req.body.deviceId };
 
   if (typeof user.phone !== "undefined" && typeof user.deviceId !== "undefined") {
+    if (!PhoneValidationPattern.test(user.phone)) {
+      res.status(404);
+      res.send({
+        Comment: "Phone is not validated",
+      });
+      res.end();
+    }
+
     if (PhoneValidationPattern.test(user.phone)) {
       if (fail.view(user) === 4) blockRequest = Date.now() + delay;
 
@@ -71,25 +78,6 @@ router.post("/phone", async (req, res) => {
         res.status(423);
         res.send(JSON.parse(JSON.stringify({ timeLeft: Math.round(timeLeft / 1000) })));
       }
-    } else {
-      res.status(404);
-      if (!user.phone.includes("+")) {
-        res.send({ Comment: "Does not occur +" });
-        return;
-      }
-      if (user.phone.length > 13) {
-        res.send({ Comment: "Is too long" });
-        return;
-      }
-      if (user.phone.length < 11) {
-        res.send({ Comment: "Is too short" });
-        return;
-      }
-      if (PhoneValidationLetters.test(user.phone)) {
-        res.send({ Comment: "Contains a letter" });
-        return;
-      }
-      res.end();
     }
   } else {
     res.status(404);
