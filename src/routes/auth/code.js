@@ -9,7 +9,7 @@ import fail from "../../variables/auth-code.variable.js";
 //Variables
 
 //
-import { user_verification as database } from "../../models/user_verification.model.js";
+import { user_verification as database } from "../../utils/models/user_verification.model.js";
 import { generateAccessToken, generateRefreshToken } from "../token/generate.token.js";
 
 //Models

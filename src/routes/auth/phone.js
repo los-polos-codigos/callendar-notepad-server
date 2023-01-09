@@ -1,30 +1,31 @@
 //
 import express from "express";
-import generate from "../../functions/generate_code/generator.js";
+import generate from "../../utils/functions/generate_code/generator.js";
 import { variable, fail } from "../../variables/auth-phone.variable.js";
 import { config } from "dotenv";
 //Deafult
 
 //
-import { body as mock_body } from "../../../mock/phone.mock.js";
+import { body as mock_body } from "../../mock/phone.mock.js";
 //Not important
 
 //
-import { send_message } from "../../functions/sms/sms.js";
+import { send_message } from "../../utils/functions/sms/sms.js";
 //Sms api
 
 config();
 const router = express.Router();
 
 let blockRequest = null;
-const PhoneValidationPattern = /^[\+]\d{1,3}\d{9}$/g;
+const PhoneValidationPattern = /^[\+]\d{1,3}\d{9}$/;
 
 router.post("/phone", async (req, res) => {
   const delay = 1000 * 60 * 15;
   const user = { phone: req.body.phone, deviceId: req.body.deviceId };
+  const PhoneValidationTest = PhoneValidationPattern.test(user.phone);
 
   if (typeof user.phone !== "undefined" && typeof user.deviceId !== "undefined") {
-    if (!PhoneValidationPattern.test(user.phone)) {
+    if (!PhoneValidationTest) {
       res.status(404);
       res.send({
         Comment: "Phone is not validated",
@@ -32,7 +33,7 @@ router.post("/phone", async (req, res) => {
       res.end();
     }
 
-    if (PhoneValidationPattern.test(user.phone)) {
+    if (PhoneValidationTest) {
       if (fail.view(user) === 4) blockRequest = Date.now() + delay;
 
       if (fail.view(user) < 5) {
