@@ -22,6 +22,8 @@ const fail = {
     });
   },
   clear: (user) => {
+    //TODO Muszę zobaczyć w czym jest błąd ponieważ w dalszym ciągu mogę odwołać się do starej wartości code:'1231',etc.
+
     variable.forEach((e, index) => {
       if (e.phone === user.phone && e.deviceId === user.deviceId) {
         variable.splice(index, 1);
