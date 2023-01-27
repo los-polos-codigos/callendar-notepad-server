@@ -40,6 +40,7 @@ router.post("/code", async (req, res) => {
           )
         );
         res.end();
+        fail.clear({ phone: req.body.phone, deviceId: req.body.deviceId });
       } else {
         if (typeof docs[0].name !== "undefined" && typeof docs[0].surrname !== "undefined") {
           const userId = docs[0]._id.toString();
@@ -55,6 +56,7 @@ router.post("/code", async (req, res) => {
             )
           );
           res.end();
+          fail.clear({ phone: req.body.phone, deviceId: req.body.deviceId });
         } else {
           const userId = docs[0]._id.toString();
 
@@ -69,6 +71,7 @@ router.post("/code", async (req, res) => {
             )
           );
           res.end();
+          fail.clear({ phone: req.body.phone, deviceId: req.body.deviceId });
         }
       }
       //Here i was checking variable and i delete all userId (phone number) objects
